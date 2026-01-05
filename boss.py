@@ -1,19 +1,17 @@
-class Boss:  # Класс для врагов (боссов или обычных монстров)
-    def __init__(self, name="Страж лабиринта", hp=150, max_hp=150, strength=10):  # Инициализация босса
-        self.name = name  # Имя врага
-        self.hp = hp  # Текущее здоровье
-        self.max_hp = max_hp  # Максимальное здоровье
-        self.strength = strength  # Сила атаки
+class Boss:
+    def __init__(self, name, hp, max_hp, attack):
+        # Имя врага
+        self.name = name
 
-    def take_damage(self, damage):  # Метод для получения урона
-        self.hp -= damage  # Уменьшаем здоровье на полученный урон
+        # Текущее здоровье врага
+        self.hp = hp
 
-    def attack(self, target):  # Обычная атака
-        damage = self.strength  # Урон равен силе атаки
-        print(f" {self.name} атакует и наносит {damage} урона!")  # Сообщение о атаке
-        target.take_damage(damage)  # Применяем урон к цели (игроку)
+        # Максимальное здоровье врага
+        self.max_hp = max_hp
 
-    def strong_attack(self, target):  # Сильная атака
-        damage = self.strength + 15  # Урон увеличен на 15
-        print(f" {self.name} сильно атакует и наносит {damage} урона!")  # Сообщение о сильной атаке
-        target.take_damage(damage)  # Применяем урон к цели
+        # Сила атаки врага
+        self.attack = attack
+
+    def take_damage(self, damage):
+        # Уменьшаем здоровье врага на полученный урон
+        self.hp -= damage

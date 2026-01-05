@@ -1,71 +1,85 @@
-import json  # Для сохранения и загрузки данных в формате JSON
+class Gamer:
+    def __init__(self, username=""):
+        # Имя игрока
+        self.username = username
 
-class Gamer:  # Класс игрока
-    def __init__(self, username="", health=120, max_health=120, attack=15, defense=5):
-        self.username = username  # Имя игрока
-        self.health = health  # Текущее здоровье
-        self.max_health = max_health  # Максимальное здоровье
-        self.attack = attack  # Сила атаки
-        self.defense = defense  # Сила защиты
-        self.artifacts = []  # Список артефактов игрока
+        # Базовые характеристики
+        self.health = 150
+        self.max_health = 150
+        self.attack = 15
+        self.defense = 0
 
-    # Функция отображения всех статов и артефактов
-    def show_full_stats(self):
-        print("\n" + "="*30)  # Разделитель для удобства
-        print(f"️ {self.username}'s Stats:")
-        print(f"HP: {self.health}/{self.max_health} | ATK: {self.attack} | DEF: {self.defense}")
-        if self.artifacts:  # Если есть артефакты
-            print("Артефакты:")
-            for art in self.artifacts:
-                print(f"- {art}")
-        else:
-            print("Артефактов пока нет.")
-        print("="*30)
+        # Список артефактов
+        self.artifacts = []
 
-    # Функция получения урона игроком
-    def take_damage(self, damage):
-        actual_damage = max(0, damage - self.defense)  # Уменьшаем урон на защиту
-        self.health -= actual_damage  # Вычитаем урон из здоровья
-        return actual_damage  # Возвращаем фактический урон
-
-    # Функция добавления артефакта и применения бонусов
-    def add_artifact(self, artifact_name):
-        if artifact_name in self.artifacts:  # Если такой артефакт уже есть
-            print(f"У тебя уже есть {artifact_name}!")
+    def add_artifact(self, artifact):
+        # Добавляем артефакт, если его ещё нет
+        if artifact in self.artifacts:
             return
 
-        self.artifacts.append(artifact_name)  # Добавляем артефакт
-        print(f" Ты получил артефакт: {artifact_name}")
+        self.artifacts.append(artifact)
 
-        # Применяем бонусы в зависимости от артефакта
-        if artifact_name == "Ржавое копьё гладиатора":
-            self.attack += 8
-            print(" Атака +8")
-        elif artifact_name == "Бронзовый нагрудник":
+        print(f"\n Ты нашёл артефакт: {artifact}")
+
+        # Эффекты артефактов
+        if artifact == "Меч гоплита":
+            self.attack += 10
+            print("️ Атака +10")
+
+        elif artifact == "Щит Афины":
+            self.defense += 15
+            print(" Защита +15")
+
+        elif artifact == "Шлем Ареса":
+            self.attack += 9
             self.defense += 10
-            print(" Защита +10")
-        elif artifact_name == "Благословение Гипноса":
-            self.max_health += 30
-            self.health += 30
-            print("️ Здоровье +30")
-        elif artifact_name == "Амулет Афины":
-            self.attack += 5
-            self.defense += 5
-            print("️ Атака +5 |  Защита +5")
-        elif artifact_name == "Каменный молот":
-            self.attack += 12
-            print("️ Атака +12")
-        elif artifact_name == "Кожаные поножи":
+            print("️ Атака +9, ️ Защита +10")
+
+        elif artifact == "Сандалии Гермеса":
             self.max_health += 15
             self.health += 15
-            print("️ Здоровье +15")
-        elif artifact_name == "Зелье стойкости":
-            self.defense += 8
-            print(" Защита +8")
-        elif artifact_name == "Священная кошка":
-            print(" Кошка приносит мораль, но не увеличивает статы")
+            print("️ Максимальное здоровье +15")
 
-        elif artifact_name == "Золото полиса":
-            self.health += 20
-            self.defense += 5
-            print("️ Здоровье +20 |  Защита +5")
+        elif artifact == "Амулет Аполлона":
+            self.health = min(self.max_health, self.health + 35)
+            print(" Восстановлено 35 здоровья")
+
+        elif artifact == "Пояс Геракла":
+            self.attack += 20
+            self.max_health += 30
+            self.health += 30
+            print(" Атака +20, ️ Макс. здоровье +30")
+
+    def show_full_stats(self):
+        # Выводим все характеристики игрока
+        print("\n ТВОЯ СТАТИСТИКА")
+        print(f"Здоровье: {self.health}/{self.max_health}")
+        print(f"Атака: {self.attack}")
+        print(f"Защита: {self.defense}")
+
+        if not self.artifacts:
+            print("Артефакты: нет")
+        else:
+            print("Артефакты:")
+            for art in self.artifacts:
+                print(f" - {art}")
+
+    def to_dict(self):
+        # Сохраняем данные игрока в словарь
+        return {
+            "username": self.username,
+            "health": self.health,
+            "max_health": self.max_health,
+            "attack": self.attack,
+            "defense": self.defense,
+            "artifacts": self.artifacts,
+
+        }
+
+    def load_from_dict(self, data):
+        # Загружаем данные игрока из словаря
+        self.health = data["health"]
+        self.max_health = data["max_health"]
+        self.attack = data["attack"]
+        self.defense = data["defense"]
+        self.artifacts = data["artifacts"]
